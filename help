@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <math.h>
+#include <cs50.h>
+
+
+void checksum ();
+
+int main (void)
+{
+    
+    long credit_card_number;
+    do
+    {
+        credit_card_number = get_long("Number: ");
+        
+        if (credit_card_number >= 56*pow(10,14) || credit_card_number < 4*pow(10,12))
+        {
+            printf("INVALID\n");
+        }
+    }
+    while (credit_card_number >= 56*pow(10,14) || credit_card_number < 4*pow(10,12));
+    
+    checksum ();
+    
+    if (CHECKSUM_CHECKER != 0)
+    {
+        printf("INVALID\n");
+    }
+        else
+        {
+        
+            if ((credit_card_number >= 4*pow(10,12) && credit_card_number <= (5*pow(10,12))-1) || (credit_card_number >= 4*pow(10,15) && credit_card_number <= (5*pow(10,15))-1)) 
+            {
+                    printf("VISA\n");
+            }
+    
+            else if (credit_card_number >= 34*pow(10,13) && credit_card_number <= (38*pow(10,13))-1)
+            {
+                    printf("AMEX\n");
+            }
+    
+            else if (credit_card_number >= 51*pow(10,14) && credit_card_number <= (56*pow(10,14))-1)
+            {
+                    printf("MASTERCARD\n");
+            }
+            
+        }
+}
+
+void checksum ()
+{
+    int CHECKSUM_CHECKER;
+    int second_digit;
+    int first_digit;
+    int checker;
+    int t = 0;
+    int x = 0;
+    int y = 0;
+    
+    for (int i = 10;; i = i * 100)
+    {
+
+        credit_card_number % i = second_digit;
+        x = x + (2 * second_digit);
+        
+            for (int z = 10;; z = z * 10)
+            {
+                t = x % z;
+                t = t + y;
+                
+                    for (int k = 10;; k = k * 10 )
+                    {
+                        credit_card_number % k = first_digit;
+                        first_digit = floor(10*first_digit) / 10;
+                        
+                        checker = t + first_digit;
+                        
+                            if (checker % 10 == 0)
+                            {
+                                CHECKSUM_CHECKER = 0;
+                            }
+                            else
+                            {
+                                CHECKSUM_CHECKER = 1;
+                            }
+                    }
+            }
+    }
+}
+
