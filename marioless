@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <cs50.h>
+
+int main(void)
+{
+   
+    //Prompts for input, prompts again if invalid number
+   
+    int height;
+    do
+    {
+        height = get_int("Height: ");
+    }
+    while (height > 8 || height < 1);
+
+    //Initial variables to determine the amount of characters is going to be typed for # and a space
+
+    int x = height - 1;
+    int h = 1;
+       
+    //Builds the pyramid
+       
+    for (int row = 0; row < height; row++)
+    {
+        for (int j = 0; j < x; j++)
+        {
+            printf(" ");  
+        }
+               
+        for (int z = 0; z < h; z++)
+        {
+            printf("#");
+        }
+               
+        x--;
+        h++;
+        printf("\n");
+         
+    }
+      
+}
