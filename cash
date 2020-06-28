@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <cs50.h>
+#include <math.h>
+
+int main(void)
+{
+    // Asks for Change Owed
+    float input;
+    do
+    {
+        input = get_float("Change owed: ");
+    }
+    while (input < 0);
+
+    // Takes input and converts it to cents
+    int owed = round(input * 100);
+
+    //Cents
+    int q = 0;
+    int d = 0;
+    int n = 0;
+    int p = 0;
+
+    while (25 <= owed)
+    {
+        owed = owed - 25;
+        q++; //Add quarter(s)
+    }
+    while (10 <= owed)
+    {
+        owed = owed - 10;
+        d++; //Add dime(s)
+    }
+    while (5 <= owed)
+    {
+        owed = owed - 5;
+        n++; //Add nickel(s)
+    }
+    while (1 <= owed)
+    {
+        owed = owed - 1;
+        p++; //Add penny or pennies
+    }
+
+    // If owed is subtracted enough to be 0, print amount of cents given
+    if (owed == 0)
+    {
+        int cents = q + d + n + p;
+        printf("%i \n", cents);
+    }
+}
