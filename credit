@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <math.h>
+#include <cs50.h>
+
+int CHECKSUM_CHECKER;
+long credit_card_number;
+
+void checksum();
+
+
+
+int main(void)
+{
+    credit_card_number = get_long("Number: "); // Main call to ask user for input
+
+    if (!((credit_card_number >= 4 * pow(10, 12) && credit_card_number <= (5 * pow(10, 12)) - 1)
+          || (credit_card_number >= 4 * pow(10, 15) && credit_card_number <= (5 * pow(10, 15)) - 1)) 
+        && !((credit_card_number >= 34 * pow(10, 13) && credit_card_number <= (35 * pow(10, 13)) - 1) 
+             || (credit_card_number >= 37 * pow(10, 13) && credit_card_number <= (38 * pow(10, 13)) - 1))
+        && !(credit_card_number >= 51 * pow(10, 14) && credit_card_number <= (56 * pow(10, 14)) - 1)) // Prints invalid if not valid
+    {
+        printf("INVALID\n");
+        return 0;
+    }
+
+
+    checksum();
+
+    if (CHECKSUM_CHECKER != 0) // Checks if card passes Luhn's Algorithm, if not, invalid credit card number
+    {
+        printf("INVALID\n");
+        return 0;
+    }
+    else
+    {
+
+        if ((credit_card_number >= 4 * pow(10, 12) && credit_card_number <= (5 * pow(10, 12)) - 1)
+            || (credit_card_number >= 4 * pow(10, 15) && credit_card_number <= (5 * pow(10, 15)) - 1)) // Checks if card is VISA
+        {
+            printf("VISA\n");
+        }
+
+        if ((credit_card_number >= 34 * pow(10, 13) && credit_card_number <= (35 * pow(10, 13)) - 1) // Checks if card is AMEX
+            || (credit_card_number >= 37 * pow(10, 13) && credit_card_number <= (38 * pow(10, 13)) - 1))
+        {
+            printf("AMEX\n");
+        }
+
+        if (credit_card_number >= 51 * pow(10, 14) && credit_card_number <= (56 * pow(10, 14)) - 1) // Checks if card is MASTERCARD
+        {
+            printf("MASTERCARD\n");
+        }
+        
+    }
+}
+
+
+void checksum() //Luhn's Algorithm
+{
+    long second_digit;
+    long first_digit;
+    long rounded;
+    long rounded_01;
+    long rounded_product_sum;
+    int product_sum = 0;
+    int sum_first = 0;
+    int the_totally_product_sum = 0;
+    int rounded_product_sum_first;
+    int rounded_product_sum_second;
+    int single;
+    int count = 0;
+    long t = credit_card_number;
+
+    do // Counts how many digits the number has
+    {
+        count++;
+
+        t /= 10;
+    }
+    while (t != 0);
+
+
+    for (long a = 100; a <= count * a; a = a * 100) // Checks every second of a digit starting from the second to the last
+    {
+        second_digit = floor((credit_card_number % a) / 10); 
+
+        rounded = floor((10 * second_digit) / (a / 10));
+
+        product_sum = (2 * rounded);
+
+        if (product_sum < 10) // If its a single digit, store it
+        {
+
+            single = product_sum;
+            the_totally_product_sum += single;
+
+        }
+        else // else, separate and store it in different variables
+        {
+            rounded_product_sum_first = product_sum % 10;
+
+            rounded_product_sum_second = floor((product_sum % 100) / 10);
+
+            the_totally_product_sum += rounded_product_sum_first;
+            the_totally_product_sum += rounded_product_sum_second;
+
+        }
+    }
+
+    for (long b = 10; b <= count * b; b = b * 100) // Sum of what we didn't process from the first steps of the algorithm
+    {
+        first_digit = floor((credit_card_number % b) / (b / 10));
+
+        rounded_01 = floor((10 * first_digit) / 10);
+
+        sum_first = sum_first + rounded_01;
+    }
+
+    int sum_of_luhns = sum_first + the_totally_product_sum; // Gets the final sum
+
+    if (sum_of_luhns % 10 == 0) // If final sum's first digit is 0, set checksum_checker as 0, else 1
+    {
+        CHECKSUM_CHECKER = 0;
+    }
+    else
+    {
+        CHECKSUM_CHECKER = 1;
+    }
+}
+
