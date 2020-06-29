@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <math.h>
+#include <cs50.h>
+#include <ctype.h>
+#include <string.h>
+
+int main(void)
+{
+    string text = get_string("Text: ");
+    int count_letters = 0;
+    int count_sentences = 0;
+    int count_words = 1;
+    
+    for (int i = 0; i < strlen(text); i++) // Gets # of letters
+    {
+        
+        int letters = text[i];
+        
+        if ((letters >= 97 && letters <= 122) || (letters >= 65 && letters <= 90))
+        {
+            count_letters++;
+        }
+    }
+    
+    for (int i = 0; i < strlen(text); i++) // Gets # of sentences
+    {
+        
+        int punctuations = text[i];
+        
+        if (punctuations == 63 || punctuations == 33 || punctuations == 46)
+        {
+            count_sentences++;
+        }
+    }
+    
+    for (int i = 0; i < strlen(text); i++) // Gets # of words
+    {
+        
+        int words = text[i];
+        
+        if (words == 32) // if array reaches a space, check if the space after it is not a space. if not, its a word.
+        {
+            int next = text[i + 1]; // gets the character next to the space
+            
+            if (next != 32) // if the character next to it is not a space, the character(s) behind it is a word
+            {
+                count_words++;
+            }
+        }
+    }
+    float L = ((float)count_letters / (float)count_words) * 100; // L
+    float S = ((float)count_sentences / (float)count_words) * 100; // S
+    
+    int index = round(0.0588 * L - 0.296 * S - 15.8); // Coleman–Liau index
+    
+    if (index >= 16) // if index is greater than 16 print this
+    {
+        printf("Grade 16+\n");
+    }
+    else if (index < 1) //if index is less than 1 print this
+    {
+        printf("Before Grade 1\n"); 
+    }
+    else // print if either wise
+    {
+        printf("Grade %i\n", index);
+    }
+    
+}
