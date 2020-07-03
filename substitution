@@ -18,7 +18,7 @@ int main(int argc, string argv[])
         {
             string alpha = argv[1];
 
-            for(int i = 0; i < len + 1; i++)
+            for (int i = 0; i < len + 1; i++)
             {
                 char letters_key = alpha[i];
 
@@ -33,7 +33,7 @@ int main(int argc, string argv[])
                 {
                     if (islower(letters_key) != 0)
                     {
-                        key[i] = letters_key + 32;
+                        key[i] = letters_key - 32;
                     }
                     else
                     {
@@ -44,13 +44,13 @@ int main(int argc, string argv[])
         }
     }
 
-    else
+    else // checks if command line argument is only two
     {
         printf("Usage: ./substitution key \n");
         exit(1);
     }
 
-    if (strlen(argv[1]) != 26)
+    if (strlen(argv[1]) != 26) // checks if key has 26 characters
     {
         printf("Key must contain 26 characters.\n");
         exit(1);
@@ -58,16 +58,16 @@ int main(int argc, string argv[])
 
     if (check == 0)
     {
-        for (int y = 0; y < 26; y++)
+        for (int y = 0; y < 26; y++) // checks if key has non digit values
         {
-            if(isalpha(key[y]) == 0)
+            if (isalpha(key[y]) == 0)
             {
                 printf("Usage: ./substitution key \n");
                 exit(1);
             }
         }
 
-        for (int z = 0; z < 26; z++)
+        for (int z = 0; z < 26; z++) // Checks for duplicates
         {
             for (int l = z + 1; l < 26; l++)
             {
@@ -93,7 +93,8 @@ int main(int argc, string argv[])
 
         printf("ciphertext: ");
 
-        for (int i = 0; i < x - 1; i++) // Transforms the original letter ACII to 0 - 25, this gives the letter a ranking or order of which is going to be used for the key.
+        for (int i = 0; i < x;
+             i++) // Transforms the original letter ACII to 0 - 25, this gives the letter a ranking or order of which is going to be used for the key.
         {
             order[i] = plaintext[i];
 
@@ -111,34 +112,38 @@ int main(int argc, string argv[])
             }
         }
 
-        for (y = 0; y < x - 1; y++) // Using the letters order from the for loop above, we can use that order to inscribe it into the key[] array. If A is = to 0, then key[0] and will print key[0].
+        for (y = 0; y < x;
+             y++) // Using the letters order from the for loop above, we can use that order to inscribe it into the key[] array. If A is = to 0, then key[0] and will print key[0].
         {
 
             if (isalpha(plaintext[y]) != 0) // Only access the key if its a letter.
             {
-                if (islower(plaintext[y]) != 0) // Since the key is displaced for it to be Uppercase in line 34, this if function transforms it to a lower case by adding 32. for example A = 65, if input is a. then 65 + 32 = 97, which is a.
+                if (islower(plaintext[y]) !=
+                    0) // Since the key is displaced for it to be Uppercase in line 34, this if function transforms it to a lower case by adding 32. for example A = 65, if input is a. then 65 + 32 = 97, which is a.
                 {
-                    key[order[y]] += 32;
+                    int lower_case = key[order[y]] + 32;
+                    printf("%c", lower_case);
                 }
-
-                cipher = key[order[y]];
+                
+                else
+                {
+                    cipher = key[order[y]];
+                    printf("%c", cipher);
+                }
             }
 
             else // If not an alphabet, retain original plaintext
             {
                 cipher = plaintext[y];
+                printf("%c", cipher);
             }
 
-            printf("%c", cipher);
+            
+            if (y + 1 == x - 1)
+            {
+                cipher = '\0';
+                printf("\n");
+            }
         }
-
-        if (y + 1 == x)
-        {
-            cipher = '\0';
-            printf("\n");
-        }
-
-
     }
-
 }
