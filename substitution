@@ -7,16 +7,40 @@
 
 int main(int argc, string argv[])
 {
+    int key[26];
+    int check;
 
-    if (argc == 2 && strlen(argv[1]) == 26 && isalpha(argv[1]) != 0)
+    if (argc == 2)
     {
-        int x = strlen(argv[1]);
-        string alphabet = argv[1];
-        int letter[x];
-        
-        for (int i = 0; i < 26; i++)
+        int len = strlen(argv[1]);
+
+        if (len == 26)
         {
-            printf("%i", alphabet[i]);
+            string alpha = argv[1];
+
+            for(int i = 0; i < len + 1; i++)
+            {
+                char letters_key = alpha[i];
+
+                if (i == 26) // if key reaches 26 letters, set check as 0 so that substitution function in line 84 knows when to start.
+                {
+                    letters_key = '\0';
+
+                    check = 0;
+                }
+
+                if (isalpha(letters_key) != 0)
+                {
+                    if (islower(letters_key) != 0)
+                    {
+                        key[i] = letters_key + 32;
+                    }
+                    else
+                    {
+                        key[i] = letters_key; // stores key
+                    }
+                }
+            }
         }
     }
 
@@ -25,10 +49,96 @@ int main(int argc, string argv[])
         printf("Usage: ./substitution key \n");
         exit(1);
     }
-    
+
     if (strlen(argv[1]) != 26)
     {
         printf("Key must contain 26 characters.\n");
         exit(1);
     }
+
+    if (check == 0)
+    {
+        for (int y = 0; y < 26; y++)
+        {
+            if(isalpha(key[y]) == 0)
+            {
+                printf("Usage: ./substitution key \n");
+                exit(1);
+            }
+        }
+
+        for (int z = 0; z < 26; z++)
+        {
+            for (int l = z + 1; l < 26; l++)
+            {
+                if (key[z] == key[l])
+                {
+                    printf("Usage: ./substitution key \n");
+                    exit(1);
+                }
+            }
+        }
+
+    }
+
+    if (check == 0) // substitution function
+    {
+        string plaintext = get_string("plaintext: ");
+        int x = strlen(plaintext) + 1;
+        int order[x];
+        int difference[x];
+        int ciphertext[x];
+        int y;
+        int cipher;
+
+        printf("ciphertext: ");
+
+        for (int i = 0; i < x - 1; i++) // Transforms the original letter ACII to 0 - 25, this gives the letter a ranking or order of which is going to be used for the key.
+        {
+            order[i] = plaintext[i];
+
+            if (isalpha(order[i]) != 0)
+            {
+                if (isupper(order[i]) != 0) // If its uppercase, displace the ASCII by 65 to set the first letter of the alphabet to 0 and so on
+                {
+                    order[i] -= 65;
+                }
+
+                if (islower(order[i]) != 0) // If its lowercase, displace the ASCII by 97 to set the first letter of the alphabet to 0 and so on
+                {
+                    order[i] -= 97;
+                }
+            }
+        }
+
+        for (y = 0; y < x - 1; y++) // Using the letters order from the for loop above, we can use that order to inscribe it into the key[] array. If A is = to 0, then key[0] and will print key[0].
+        {
+
+            if (isalpha(plaintext[y]) != 0) // Only access the key if its a letter.
+            {
+                if (islower(plaintext[y]) != 0) // Since the key is displaced for it to be Uppercase in line 34, this if function transforms it to a lower case by adding 32. for example A = 65, if input is a. then 65 + 32 = 97, which is a.
+                {
+                    key[order[y]] += 32;
+                }
+
+                cipher = key[order[y]];
+            }
+
+            else // If not an alphabet, retain original plaintext
+            {
+                cipher = plaintext[y];
+            }
+
+            printf("%c", cipher);
+        }
+
+        if (y + 1 == x)
+        {
+            cipher = '\0';
+            printf("\n");
+        }
+
+
+    }
+
 }
